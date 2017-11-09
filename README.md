@@ -2,5 +2,5 @@
 通过PorterDuffXfermode实现的圆角imageView
 
 ![pic](https://github.com/zongkaili/Xfermode_Demo/blob/master/pic.jpg?raw=true)
-![screen](https://github.com/zongkaili/Xfermode_Demo/blob/master/screen.png?raw=true)
+![screen](https://github.com/zongkaili/Xfermode_Demo/blob/master/screen.jpg?raw=true)
 
