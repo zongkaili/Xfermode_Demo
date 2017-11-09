@@ -127,3 +127,5 @@ Tips: 此demo只用到了其中的DST_IN模式
              return bitmap
          }
 ```
+
+Tips: 此demo的svg资源来自[CustomShapeImageView](https://github.com/MostafaGazar/CustomShapeImageView)
