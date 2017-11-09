@@ -1,0 +1,2 @@
+# Xfermode_Demo
+通过PorterDuffXfermode实现的圆角imageView
