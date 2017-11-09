@@ -4,7 +4,8 @@
 ## 效果图
 ![screen](https://github.com/zongkaili/Xfermode_Demo/blob/master/screen.jpg?raw=true)
 
-##PorterDuff的各个模式以及对应的效果图
+## PorterDuff的各个模式以及对应的效果图
+Tips: 此demo只用到了其中的DST_IN模式
  * 1. PorterDuff.Mode.CLEAR      所绘制不会提交到画布上。
  * 2. PorterDuff.Mode.SRC        显示上层绘制图片
  * 3. PorterDuff.Mode.DST        显示下层绘制图片
@@ -24,9 +25,10 @@
  
  ![pic](https://github.com/zongkaili/Xfermode_Demo/blob/master/pic.jpg?raw=true)
  
-##实现过程
+## 实现过程
 -----
 1.获取自定义属性并写进成员变量
+-----
 ```kotlin
    init {
         mPaint = Paint()
@@ -41,7 +43,7 @@
     }
 ```
 
-2.onDraw()里面绘制过程
+2.onDraw()绘制过程
 -----
 ```kotlin
    override fun onDraw(canvas: Canvas) {
@@ -81,6 +83,7 @@
        }
 ```
 3.绘制外层圆形或者圆角的bitmap
+-----
 ```kotlin
  private val mBitmap: Bitmap
         get() {
