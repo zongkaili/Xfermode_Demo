@@ -1,8 +1,9 @@
 # Xfermode_Demo
-通过PorterDuffXfermode实现的圆角imageView
+通过PorterDuffXfermode实现的圆角、圆形和svg图形样式的ImageView
 
 ## 效果图
 ![screen](https://github.com/zongkaili/Xfermode_Demo/blob/master/screen.jpg?raw=true)
+![screen](https://github.com/zongkaili/Xfermode_Demo/blob/master/effect.gif?raw=true)
 
 ## PorterDuff的各个模式以及对应的效果图
 Tips: 此demo只用到了其中的DST_IN模式
@@ -27,20 +28,40 @@ Tips: 此demo只用到了其中的DST_IN模式
  
 ## 实现过程
 -----
+0.首先定义style
+-----
+```xml
+<resources>
+  <attr name="borderRadius" format="dimension"/>
+    <attr name="type" format="integer">
+        <enum name="circle" value="0"/>
+        <enum name="round" value="1"/>
+        <enum name="svg" value="2"/>
+    </attr>
+    <attr name="svg_resource" format="reference" />
+
+    <declare-styleable name="ShapeImageViewByXfermode">
+        <attr name="borderRadius"/>
+        <attr name="type"/>
+        <attr name="svg_resource"/>
+    </declare-styleable>
+</resources>
+```
 1.获取自定义属性并写进成员变量
 -----
 ```kotlin
    init {
-        mPaint = Paint()
-        mPaint!!.isAntiAlias = true
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.RoundImageViewByXfermode)
-        mBorderRadius = typedArray.getDimensionPixelSize(R.styleable.RoundImageViewByXfermode_borderRadius,
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, BODER_RADIUS_DEFAULT.toFloat(), resources.displayMetrics).toInt())
+       mPaint = Paint()
+       mPaint!!.isAntiAlias = true
+       val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ShapeImageViewByXfermode)
+       mBorderRadius = typedArray.getDimensionPixelSize(R.styleable.ShapeImageViewByXfermode_borderRadius,
+               TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, BODER_RADIUS_DEFAULT.toFloat(), resources.displayMetrics).toInt())
 
-        type = typedArray.getInt(R.styleable.RoundImageViewByXfermode_type, TYPE_CIRCLE)
-        Log.d(TAG, " mBorderRadius : $mBorderRadius type: $type")
-        typedArray.recycle()
-    }
+       mType = typedArray.getInt(R.styleable.ShapeImageViewByXfermode_type, TYPE_CIRCLE)
+       mSvgRawResourceId = typedArray.getResourceId(R.styleable.ShapeImageViewByXfermode_svg_resource, 0)
+       Log.d(TAG, " mBorderRadius : $mBorderRadius mType: $mType")
+       typedArray.recycle()
+   }
 ```
 
 2.onDraw()绘制过程
@@ -57,14 +78,14 @@ Tips: 此demo只用到了其中的DST_IN模式
                bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                var scale = 1.0f
                //2.创建画布
-               drawCanvas = Canvas(bitmap!!)
-               if (type == TYPE_ROUND) {
+               mDrawCanvas = Canvas(bitmap!!)
+               if (mType == TYPE_ROUND) {
                    scale = Math.max(width * 1.0f / dWidth, height * 1.0f / dHeight)
                } else {
                    scale = width * 1.0f / Math.min(dWidth, dHeight)
                }
                drawable.setBounds(0, 0, (dWidth * scale).toInt(), (dHeight * scale).toInt())
-               drawable.draw(drawCanvas)
+               drawable.draw(mDrawCanvas)
                if (mMaskBitmap == null || mMaskBitmap!!.isRecycled) {
                    mMaskBitmap = mBitmap
                }
@@ -72,7 +93,7 @@ Tips: 此demo只用到了其中的DST_IN模式
                mPaint!!.isFilterBitmap = false
                mPaint!!.xfermode = mXfermode
                //4.绘制形状
-               drawCanvas.drawBitmap(mMaskBitmap!!, 0f, 0f, mPaint)
+               mDrawCanvas.drawBitmap(mMaskBitmap!!, 0f, 0f, mPaint)
                mPaint!!.xfermode = null
                canvas.drawBitmap(bitmap, 0f, 0f, null)
                mWeakBitmap = WeakReference(bitmap)
@@ -85,19 +106,23 @@ Tips: 此demo只用到了其中的DST_IN模式
 3.绘制外层圆形或者圆角的bitmap
 -----
 ```kotlin
- private val mBitmap: Bitmap
-        get() {
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-            paint.color = Color.BLACK
-
-            if (type == TYPE_ROUND) {
-                canvas.drawRoundRect(RectF(0f, 0f, width.toFloat(), height.toFloat()), mBorderRadius.toFloat(), mBorderRadius.toFloat(), paint)
-            } else {
-                canvas.drawCircle((width / 2).toFloat(), (width / 2).toFloat(), (width / 2).toFloat(), paint)
-            }
-            return bitmap
-        }
+   private val mBitmap: Bitmap
+         get() {
+             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+             val canvas = Canvas(bitmap)
+             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+             paint.color = Color.BLACK
+ 
+             when (mType) {
+                 TYPE_ROUND -> canvas.drawRoundRect(RectF(0f, 0f, width.toFloat(), height.toFloat()), mBorderRadius.toFloat(), mBorderRadius.toFloat(), paint)
+                 TYPE_CIRCLE -> canvas.drawCircle((width / 2).toFloat(), (width / 2).toFloat(), (width / 2).toFloat(), paint)
+                 TYPE_SVG -> {
+                     if(mSvgRawResourceId > 0) {
+                         val svg: SVG = SVGParser.getSVGFromInputStream(context.resources.openRawResource(mSvgRawResourceId),width,height)
+                         canvas.drawPicture(svg.picture)
+                     }
+                 }
+             }
+             return bitmap
+         }
 ```
-

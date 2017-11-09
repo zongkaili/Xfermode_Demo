@@ -7,6 +7,8 @@ import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
+import com.kelly.xfermode.svgandroid.SVG
+import com.kelly.xfermode.svgandroid.SVGParser
 import java.lang.ref.WeakReference
 
 /**
@@ -32,26 +34,28 @@ import java.lang.ref.WeakReference
  * 16. PorterDuff.Mode.SCREEN    取两图层全部区域，交集部分变为透明色
  */
 
-class RoundImageViewByXfermode(context: Context, attrs: AttributeSet?) : AppCompatImageView(context, attrs) {
+class ShapeImageViewByXfermode(context: Context, attrs: AttributeSet?) : AppCompatImageView(context, attrs) {
     private var mPaint: Paint? = null
     private val mXfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
     private var mMaskBitmap: Bitmap? = null
     private var mWeakBitmap: WeakReference<Bitmap>? = null
-    private lateinit var drawCanvas: Canvas
+    private lateinit var mDrawCanvas: Canvas
     /**
      * 图片的类型，圆形or圆角
      */
-    private val type: Int
+    private val mType: Int
+    private val mSvgRawResourceId: Int
     /**
      * 圆角半径
      */
     private val mBorderRadius: Int
 
     companion object {
-        private val TAG = RoundImageViewByXfermode::class.java.simpleName
+        private val TAG = ShapeImageViewByXfermode::class.java.simpleName
         private val BODER_RADIUS_DEFAULT = 0
         val TYPE_CIRCLE = 0
         val TYPE_ROUND = 1
+        val TYPE_SVG = 2
     }
 
     private val mBitmap: Bitmap
@@ -61,10 +65,15 @@ class RoundImageViewByXfermode(context: Context, attrs: AttributeSet?) : AppComp
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.color = Color.BLACK
 
-            if (type == TYPE_ROUND) {
-                canvas.drawRoundRect(RectF(0f, 0f, width.toFloat(), height.toFloat()), mBorderRadius.toFloat(), mBorderRadius.toFloat(), paint)
-            } else {
-                canvas.drawCircle((width / 2).toFloat(), (width / 2).toFloat(), (width / 2).toFloat(), paint)
+            when (mType) {
+                TYPE_ROUND -> canvas.drawRoundRect(RectF(0f, 0f, width.toFloat(), height.toFloat()), mBorderRadius.toFloat(), mBorderRadius.toFloat(), paint)
+                TYPE_CIRCLE -> canvas.drawCircle((width / 2).toFloat(), (width / 2).toFloat(), (width / 2).toFloat(), paint)
+                TYPE_SVG -> {
+                    if(mSvgRawResourceId > 0) {
+                        val svg: SVG = SVGParser.getSVGFromInputStream(context.resources.openRawResource(mSvgRawResourceId),width,height)
+                        canvas.drawPicture(svg.picture)
+                    }
+                }
             }
             return bitmap
         }
@@ -78,19 +87,20 @@ class RoundImageViewByXfermode(context: Context, attrs: AttributeSet?) : AppComp
     init {
         mPaint = Paint()
         mPaint!!.isAntiAlias = true
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.RoundImageViewByXfermode)
-        mBorderRadius = typedArray.getDimensionPixelSize(R.styleable.RoundImageViewByXfermode_borderRadius,
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ShapeImageViewByXfermode)
+        mBorderRadius = typedArray.getDimensionPixelSize(R.styleable.ShapeImageViewByXfermode_borderRadius,
                 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, BODER_RADIUS_DEFAULT.toFloat(), resources.displayMetrics).toInt())
 
-        type = typedArray.getInt(R.styleable.RoundImageViewByXfermode_type, TYPE_CIRCLE)
-        Log.d(TAG, " mBorderRadius : $mBorderRadius type: $type")
+        mType = typedArray.getInt(R.styleable.ShapeImageViewByXfermode_type, TYPE_CIRCLE)
+        mSvgRawResourceId = typedArray.getResourceId(R.styleable.ShapeImageViewByXfermode_svg_resource, 0)
+        Log.d(TAG, " mBorderRadius : $mBorderRadius mType: $mType")
         typedArray.recycle()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        if (type == TYPE_CIRCLE) {
+        if (mType == TYPE_CIRCLE) {
             val width = Math.min(measuredWidth, measuredHeight)
             setMeasuredDimension(width, width)
         }
@@ -107,14 +117,14 @@ class RoundImageViewByXfermode(context: Context, attrs: AttributeSet?) : AppComp
             bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             var scale = 1.0f
             //2.创建画布
-            drawCanvas = Canvas(bitmap!!)
-            if (type == TYPE_ROUND) {
+            mDrawCanvas = Canvas(bitmap!!)
+            if (mType == TYPE_ROUND) {
                 scale = Math.max(width * 1.0f / dWidth, height * 1.0f / dHeight)
             } else {
                 scale = width * 1.0f / Math.min(dWidth, dHeight)
             }
             drawable.setBounds(0, 0, (dWidth * scale).toInt(), (dHeight * scale).toInt())
-            drawable.draw(drawCanvas)
+            drawable.draw(mDrawCanvas)
             if (mMaskBitmap == null || mMaskBitmap!!.isRecycled) {
                 mMaskBitmap = mBitmap
             }
@@ -122,7 +132,7 @@ class RoundImageViewByXfermode(context: Context, attrs: AttributeSet?) : AppComp
             mPaint!!.isFilterBitmap = false
             mPaint!!.xfermode = mXfermode
             //4.绘制形状
-            drawCanvas.drawBitmap(mMaskBitmap!!, 0f, 0f, mPaint)
+            mDrawCanvas.drawBitmap(mMaskBitmap!!, 0f, 0f, mPaint)
             mPaint!!.xfermode = null
             canvas.drawBitmap(bitmap, 0f, 0f, null)
             mWeakBitmap = WeakReference(bitmap)

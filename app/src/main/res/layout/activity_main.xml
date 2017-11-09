@@ -2,60 +2,174 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
-
-        <com.kelly.xfermode.RoundImageViewByXfermode
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon" />
+            android:text="type == svg :"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
-        <com.kelly.xfermode.RoundImageViewByXfermode
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_margin="10dp"
-            android:src="@drawable/icon"
-            app:borderRadius="30dp"
-            app:type="round" />
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:orientation="horizontal">
 
-        <com.kelly.xfermode.RoundImageViewByXfermode
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:layout_margin="10dp"
-            android:src="@drawable/icon1"
-            android:scaleType="centerCrop"
-            app:borderRadius="10dp"
-            app:type="round" />
+            <com.kelly.xfermode.ShapeImageViewByXfermode
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/icon"
+                app:borderRadius="30dp"
+                app:svg_resource="@raw/shape_5"
+                app:type="svg" />
 
-        <com.kelly.xfermode.RoundImageViewByXfermode
-            android:layout_width="100dp"
-            android:layout_height="200dp"
-            android:layout_margin="10dp"
-            android:src="@drawable/icon"
-            android:scaleType="centerCrop"
-            app:borderRadius="10dp"
-            app:type="round" />
+            <com.kelly.xfermode.ShapeImageViewByXfermode
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/icon"
+                app:borderRadius="30dp"
+                app:svg_resource="@raw/shape_circle_2"
+                app:type="svg" />
 
-        <com.kelly.xfermode.RoundImageViewByXfermode
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_margin="10dp"
-            android:src="@drawable/icon"
-            app:type="circle" />
+            <com.kelly.xfermode.ShapeImageViewByXfermode
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/icon"
+                app:borderRadius="30dp"
+                app:svg_resource="@raw/shape_flower"
+                app:type="svg" />
 
-        <com.kelly.xfermode.RoundImageViewByXfermode
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            <com.kelly.xfermode.ShapeImageViewByXfermode
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/icon"
+                app:borderRadius="30dp"
+                app:svg_resource="@raw/shape_heart"
+                app:type="svg" />
+
+            <com.kelly.xfermode.ShapeImageViewByXfermode
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/icon"
+                app:borderRadius="30dp"
+                app:svg_resource="@raw/shape_star"
+                app:type="svg" />
+
+            <com.kelly.xfermode.ShapeImageViewByXfermode
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/icon"
+                app:borderRadius="30dp"
+                app:svg_resource="@raw/shape_star_2"
+                app:type="svg" />
+
+            <com.kelly.xfermode.ShapeImageViewByXfermode
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/icon"
+                app:borderRadius="30dp"
+                app:svg_resource="@raw/shape_star_3"
+                app:type="svg" />
+
+        </GridLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:src="@drawable/icon"
-            app:type="circle" />
+            android:text="type == circle :"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:orientation="horizontal">
+
+            <com.kelly.xfermode.ShapeImageViewByXfermode
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/icon"
+                app:type="circle" />
+
+            <com.kelly.xfermode.ShapeImageViewByXfermode
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icon"
+                app:type="circle" />
+
+            <com.kelly.xfermode.ShapeImageViewByXfermode
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/icon"
+                app:type="circle" />
+
+        </GridLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="type == round :"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:orientation="horizontal">
+
+            <com.kelly.xfermode.ShapeImageViewByXfermode
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/icon"
+                app:borderRadius="30dp"
+                app:type="round" />
+
+            <com.kelly.xfermode.ShapeImageViewByXfermode
+                android:layout_width="200dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icon1"
+                app:borderRadius="10dp"
+                app:type="round" />
+
+            <com.kelly.xfermode.ShapeImageViewByXfermode
+                android:layout_width="100dp"
+                android:layout_height="200dp"
+                android:layout_margin="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icon"
+                app:borderRadius="10dp"
+                app:type="round" />
+
+        </GridLayout>
 
     </LinearLayout>
 

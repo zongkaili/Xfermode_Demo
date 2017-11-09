@@ -9,14 +9,17 @@
     </style>
 
     <attr name="borderRadius" format="dimension"/>
-    <attr name="type">
+    <attr name="type" format="integer">
         <enum name="circle" value="0"/>
         <enum name="round" value="1"/>
+        <enum name="svg" value="2"/>
     </attr>
+    <attr name="svg_resource" format="reference" />
 
-    <declare-styleable name="RoundImageViewByXfermode">
+    <declare-styleable name="ShapeImageViewByXfermode">
         <attr name="borderRadius"/>
         <attr name="type"/>
+        <attr name="svg_resource"/>
     </declare-styleable>
 
 </resources>
