@@ -2,7 +2,8 @@
 通过PorterDuffXfermode实现的圆角、圆形和svg图形样式的ImageView
 
 ## 效果图
-![screen](https://github.com/zongkaili/Xfermode_Demo/blob/master/screen.jpg?raw=true)
+![screen](https://github.com/zongkaili/Xfermode_Demo/blob/master/screen1.jpg?raw=true)
+![screen](https://github.com/zongkaili/Xfermode_Demo/blob/master/screen2.jpg?raw=true)
 ![screen](https://github.com/zongkaili/Xfermode_Demo/blob/master/effect.gif?raw=true)
 
 ## PorterDuff的各个模式以及对应的效果图
